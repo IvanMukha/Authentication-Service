@@ -1,0 +1,19 @@
+package com.mukha.authservice.client;
+
+import com.mukha.authservice.dto.UserCreateDto;
+import com.mukha.authservice.dto.response.UserResponseDto;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+@FeignClient(name = "${services.user-service.name}", url = "${services.user-service.url}")
+public interface UserServiceClient {
+
+    @PostMapping("/api/users")
+    UserResponseDto createUserInDb(@RequestBody UserCreateDto dto);
+
+    @DeleteMapping("/api/users/{id}")
+    void deleteUserFromDb(@PathVariable("id") Long id);
+}
