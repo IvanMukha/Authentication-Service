@@ -9,4 +9,5 @@ public record UserResponseDto(Long id,
                               String surname,
                               LocalDate birthDate,
                               String email,
-                              Boolean active) {}
+                              Boolean active) {
+}

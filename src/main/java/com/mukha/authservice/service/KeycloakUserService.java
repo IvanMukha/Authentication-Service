@@ -1,9 +1,7 @@
 package com.mukha.authservice.service;
 
-import com.mukha.authservice.dto.request.LoginRequest;
+import com.mukha.authservice.client.KeycloakClient;
 import com.mukha.authservice.dto.request.RegisterRequest;
-import com.mukha.authservice.dto.response.TokenResponse;
-import com.mukha.authservice.exception.InvalidCredentialsException;
 import com.mukha.authservice.exception.RegistrationException;
 import com.mukha.authservice.exception.UserAlreadyExistsException;
 import jakarta.ws.rs.core.Response;
@@ -16,12 +14,7 @@ import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestClient;
 
 import java.util.List;
 
@@ -30,13 +23,8 @@ import java.util.List;
 @Slf4j
 public class KeycloakUserService {
     private final Keycloak keycloakAdminClient;
-    private final RestClient keycloakTokenClient;
     @Value("${keycloak.realm}")
     private String realm;
-    @Value("${keycloak.client-id}")
-    private String clientId;
-    @Value("${keycloak.client-secret}")
-    private String clientSecret;
 
     public String createUser(RegisterRequest request) {
         UserRepresentation kcUser = toKeycloakUser(request);
@@ -53,16 +41,6 @@ public class KeycloakUserService {
         }
     }
 
-    public TokenResponse login(LoginRequest req) {
-        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-        formData.add("client_id", clientId);
-        formData.add("client_secret", clientSecret);
-        formData.add("grant_type", "password");
-        formData.add("username", req.login());
-        formData.add("password", req.password());
-
-        return requestToken(formData);
-    }
 
     public void deleteUser(String kcUserId) {
         try {
@@ -89,19 +67,5 @@ public class KeycloakUserService {
         cred.setTemporary(false);
         user.setCredentials(List.of(cred));
         return user;
-    }
-
-    private TokenResponse requestToken(MultiValueMap<String, String> form) {
-        try {
-            return keycloakTokenClient.post()
-                    .uri("/token")
-                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                    .body(form)
-                    .retrieve()
-                    .body(TokenResponse.class);
-        } catch (HttpClientErrorException e) {
-            log.warn("Authentication failed: status={}, body={}", e.getStatusCode(), e.getResponseBodyAsString());
-            throw new InvalidCredentialsException();
-        }
     }
 }

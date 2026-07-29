@@ -6,7 +6,6 @@ import org.keycloak.admin.client.KeycloakBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestClient;
 
 @Configuration
 public class KeycloakConfig {
@@ -20,7 +19,7 @@ public class KeycloakConfig {
     private String clientSecret;
 
     @Bean(destroyMethod = "close")
-    public Keycloak keycloakAdminClient(){
+    public Keycloak keycloakAdminClient() {
         return KeycloakBuilder.builder()
                 .serverUrl(keycloakUrl)
                 .realm(realm)
@@ -29,9 +28,5 @@ public class KeycloakConfig {
                 .clientSecret(clientSecret)
                 .build();
     }
-    @Bean public RestClient keycloakTokenClient() {
-        return RestClient.builder()
-                .baseUrl(keycloakUrl + "/realms/" + realm + "/protocol/openid-connect")
-                .build(); }
 }
 

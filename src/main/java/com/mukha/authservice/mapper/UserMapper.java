@@ -1,7 +1,7 @@
 package com.mukha.authservice.mapper;
 
 import com.mukha.authservice.dto.request.RegisterRequest;
-import com.mukha.authservice.dto.UserCreateDto;
+import com.mukha.authservice.dto.request.UserCreateDto;
 import com.mukha.authservice.dto.response.UserResponseDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

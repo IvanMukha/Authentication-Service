@@ -36,8 +36,9 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleUserServiceException(UserServiceException e) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
+
     @ExceptionHandler(RollbackFailureException.class)
-    public ProblemDetail handleRollbackFailureException(RollbackFailureException e){
+    public ProblemDetail handleRollbackFailureException(RollbackFailureException e) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
 

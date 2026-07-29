@@ -12,7 +12,7 @@ public record RegisterRequest(
         @NotBlank(message = "Login cannot be empty")
         String login,
         @NotBlank(message = "Password cannot be empty")
-        @Size(min = 8,message = "Password must contain 8 characters or more")
+        @Size(min = 8, message = "Password must contain 8 characters or more")
         String password,
         @NotBlank(message = "Name cannot be empty")
         String name,
@@ -24,4 +24,5 @@ public record RegisterRequest(
         @NotBlank(message = "Email is required")
         @Email(message = "Invalid email format")
         String email,
-        Boolean active){}
+        Boolean active) {
+}
