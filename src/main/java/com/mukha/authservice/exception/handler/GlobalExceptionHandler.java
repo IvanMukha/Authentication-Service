@@ -1,6 +1,7 @@
 package com.mukha.authservice.exception.handler;
 
 import com.mukha.authservice.exception.InvalidCredentialsException;
+import com.mukha.authservice.exception.InvalidTokenException;
 import com.mukha.authservice.exception.RegistrationException;
 import com.mukha.authservice.exception.RollbackFailureException;
 import com.mukha.authservice.exception.UserAlreadyExistsException;
@@ -16,6 +17,11 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ProblemDetail handleInvalidTokenException(InvalidCredentialsException e){
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,e.getMessage());
+    }
 
     @ExceptionHandler(RegistrationException.class)
     public ProblemDetail handleRegistrationException(RegistrationException e) {

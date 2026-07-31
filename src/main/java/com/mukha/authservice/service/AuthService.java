@@ -7,6 +7,7 @@ import com.mukha.authservice.dto.request.UserCreateDto;
 import com.mukha.authservice.dto.response.TokenResponse;
 import com.mukha.authservice.dto.response.UserResponseDto;
 import com.mukha.authservice.exception.InvalidCredentialsException;
+import com.mukha.authservice.exception.InvalidTokenException;
 import com.mukha.authservice.exception.RegistrationException;
 import com.mukha.authservice.exception.UserServiceException;
 import com.mukha.authservice.mapper.UserMapper;
@@ -72,7 +73,7 @@ public class AuthService {
             return keycloakClient.getToken(formData);
         } catch (feign.FeignException.Unauthorized | feign.FeignException.BadRequest e) {
             log.warn("Refresh token rotation failed via Feign: status={}, body={}", e.status(), e.contentUTF8());
-            throw new InvalidCredentialsException();
+            throw new InvalidTokenException();
         }
     }
 }
