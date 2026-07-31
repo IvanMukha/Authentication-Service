@@ -3,7 +3,6 @@ package com.mukha.authservice.exception.handler;
 import com.mukha.authservice.exception.InvalidCredentialsException;
 import com.mukha.authservice.exception.InvalidTokenException;
 import com.mukha.authservice.exception.RegistrationException;
-import com.mukha.authservice.exception.RollbackFailureException;
 import com.mukha.authservice.exception.UserAlreadyExistsException;
 import com.mukha.authservice.exception.UserServiceException;
 import org.springframework.http.HttpStatus;
@@ -18,14 +17,9 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(InvalidTokenException.class)
-    public ProblemDetail handleInvalidTokenException(InvalidCredentialsException e){
+    @ExceptionHandler({InvalidTokenException.class, RegistrationException.class})
+    public ProblemDetail handleInvalidTokenAndRegistrationException(RuntimeException e){
         return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,e.getMessage());
-    }
-
-    @ExceptionHandler(RegistrationException.class)
-    public ProblemDetail handleRegistrationException(RegistrationException e) {
-        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 
     @ExceptionHandler(InvalidCredentialsException.class)
@@ -38,13 +32,8 @@ public class GlobalExceptionHandler {
         return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, e.getMessage());
     }
 
-    @ExceptionHandler(UserServiceException.class)
+    @ExceptionHandler({UserServiceException.class})
     public ProblemDetail handleUserServiceException(UserServiceException e) {
-        return ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-    }
-
-    @ExceptionHandler(RollbackFailureException.class)
-    public ProblemDetail handleRollbackFailureException(RollbackFailureException e) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
 

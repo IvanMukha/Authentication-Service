@@ -7,7 +7,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "keycloak-token-client", url = "${keycloak.server-url}/realms/${keycloak.realm}/protocol/openid-connect")
+@FeignClient(name = "keycloak-token-client", url = "${keycloak.token-url}")
 public interface KeycloakClient {
 
     @PostMapping(value = "/token", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)

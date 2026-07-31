@@ -51,9 +51,7 @@ public class AuthService {
             MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
             formData.add("client_id", clientId);
             formData.add("client_secret", clientSecret);
-            formData.add("grant_type", "password");
-            formData.add("username", request.login());
-            formData.add("password", request.password());
+            formData.add("grant_type", "client_credentials");
 
             return keycloakClient.getToken(formData);
         } catch (FeignException.Unauthorized | FeignException.BadRequest e) {
