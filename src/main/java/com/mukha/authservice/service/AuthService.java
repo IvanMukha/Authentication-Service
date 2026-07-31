@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +47,7 @@ public class AuthService {
 
     public TokenResponse login(LoginRequest request) {
         try {
-            org.springframework.util.MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+            MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
             formData.add("client_id", clientId);
             formData.add("client_secret", clientSecret);
             formData.add("grant_type", "password");
@@ -62,7 +63,7 @@ public class AuthService {
 
     public TokenResponse refreshToken(String refreshToken) {
         try {
-            org.springframework.util.MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+            MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
             formData.add("client_id", clientId);
             formData.add("client_secret", clientSecret);
             formData.add("grant_type", "refresh_token");
