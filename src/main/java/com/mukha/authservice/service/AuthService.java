@@ -2,7 +2,7 @@ package com.mukha.authservice.service;
 
 import com.mukha.authservice.client.KeycloakClient;
 import com.mukha.authservice.dto.request.LoginRequest;
-import com.mukha.authservice.dto.request.RegisterRequest;
+import com.mukha.authservice.dto.request.SignUpRequest;
 import com.mukha.authservice.dto.request.UserCreateDto;
 import com.mukha.authservice.dto.response.TokenResponse;
 import com.mukha.authservice.dto.response.UserResponseDto;
@@ -32,7 +32,7 @@ public class AuthService {
     @Value("${keycloak.client-secret}")
     private String clientSecret;
 
-    public UserResponseDto register(RegisterRequest request) {
+    public UserResponseDto signUp(SignUpRequest request) {
         String kcUserId = keycloakUserService.createUser(request);
         try {
             UserCreateDto dto = userMapper.toUserServiceDto(request, kcUserId);

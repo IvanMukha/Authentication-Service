@@ -59,8 +59,8 @@ services:
     ports:
       - "${KEYCLOAK_EXTERNAL_PORT}:8080"
     environment:
-      KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://authservice-postgres:5432/${DB_NAME}
+      KC_DB: ${DB_NAME}
+      KC_DB_URL: jdbc:postgresql://${DB_HOST}:${DB_PORT_INTERNAL}/${DB_NAME}
       KC_DB_USERNAME: ${DB_USER}
       KC_DB_PASSWORD: ${DB_PASSWORD}
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}

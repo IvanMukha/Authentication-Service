@@ -1,7 +1,6 @@
 package com.mukha.authservice.service;
 
-import com.mukha.authservice.client.KeycloakClient;
-import com.mukha.authservice.dto.request.RegisterRequest;
+import com.mukha.authservice.dto.request.SignUpRequest;
 import com.mukha.authservice.exception.RegistrationException;
 import com.mukha.authservice.exception.UserAlreadyExistsException;
 import jakarta.ws.rs.core.Response;
@@ -26,7 +25,7 @@ public class KeycloakUserService {
     @Value("${keycloak.realm}")
     private String realm;
 
-    public String createUser(RegisterRequest request) {
+    public String createUser(SignUpRequest request) {
         UserRepresentation kcUser = toKeycloakUser(request);
         try (Response response = keycloakAdminClient.realm(realm).users().create(kcUser)) {
             if (response.getStatus() == HttpStatus.CONFLICT.value()) {
@@ -46,7 +45,7 @@ public class KeycloakUserService {
         try {
             keycloakAdminClient.realm(realm).users().get(kcUserId).remove();
         } catch (Exception e) {
-            log.error("Failed to rollback Keycloak user {}", kcUserId, e);
+            log.error("Failed to delete Keycloak user {}", kcUserId, e);
         }
     }
 
@@ -57,7 +56,7 @@ public class KeycloakUserService {
                 .roles().realmLevel().add(List.of(role));
     }
 
-    private UserRepresentation toKeycloakUser(RegisterRequest request) {
+    private UserRepresentation toKeycloakUser(SignUpRequest request) {
         UserRepresentation user = new UserRepresentation();
         user.setUsername(request.login());
         user.setEnabled(true);

@@ -3,7 +3,7 @@ package com.mukha.authservice.controller;
 
 import com.mukha.authservice.dto.request.LoginRequest;
 import com.mukha.authservice.dto.request.RefreshTokenRequest;
-import com.mukha.authservice.dto.request.RegisterRequest;
+import com.mukha.authservice.dto.request.SignUpRequest;
 import com.mukha.authservice.dto.response.TokenResponse;
 import com.mukha.authservice.dto.response.UserResponseDto;
 import com.mukha.authservice.service.AuthService;
@@ -23,9 +23,9 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/register")
-    public ResponseEntity<UserResponseDto> register(@Valid @RequestBody RegisterRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(request));
+    @PostMapping("/sign-up")
+    public ResponseEntity<UserResponseDto> signUp(@Valid @RequestBody SignUpRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(authService.signUp(request));
     }
 
     @PostMapping("/login")
