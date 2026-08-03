@@ -1,0 +1,82 @@
+services:
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: authservice-postgres
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${DB_PORT_EXTERNAL}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - authservice-network
+    deploy:
+      resources:
+        limits:
+          memory: ${POSTGRES_MEM_LIMIT}
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: authservice-app
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT_INTERNAL}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      APP_NAME: ${APP_NAME}
+      USER_SERVICE_NAME: ${USER_SERVICE_NAME}
+      USER_SERVICE_URL: ${USER_SERVICE_URL}
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
+      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - authservice-network
+    deploy:
+      resources:
+        limits:
+          memory: ${APP_MEM_LIMIT}
+
+  keycloak:
+    container_name: Keycloak
+    image: quay.io/keycloak/keycloak:latest
+    ports:
+      - "${KEYCLOAK_EXTERNAL_PORT}:8080"
+    environment:
+      KC_DB: ${DB_NAME}
+      KC_DB_URL: jdbc:postgresql://${DB_HOST}:${DB_PORT_INTERNAL}/${DB_NAME}
+      KC_DB_USERNAME: ${DB_USER}
+      KC_DB_PASSWORD: ${DB_PASSWORD}
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+    networks:
+      - authservice-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command:
+      - "start-dev"
+
+networks:
+  authservice-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+    driver: local
