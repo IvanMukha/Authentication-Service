@@ -48,7 +48,7 @@ jobs:
         run: |
           mvn -B clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
             -Dsonar.projectKey=Authentication-Service \
-            -Dsonar.organization=IvanMukha \
+            -Dsonar.organization=ivanmukha \
             -Dsonar.host.url=$SONAR_HOST_URL \
             -Dsonar.token=$SONAR_TOKEN \
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
